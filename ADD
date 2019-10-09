@@ -1,0 +1,33 @@
+module AdderFourBit #(parameter n=3) (OP1,OP2,ALUFlagIn,V,Result);
+    input [n:0] OP1;
+    input [n:0] OP2;
+    input ALUFlagIn;
+    output V;
+    output [n:0] Result;
+    
+    wire [n+1:0] carry;
+	 assign carry[0] = ALUFlagIn;
+	 
+	 genvar i;
+	 generate for(i=0; i<n; i=i+1)
+	 begin: loop
+	 SingleBitAdder fa(OP1[i], OP2[i], carry[i], Result[i], carry[i+1]);
+	 end 
+	 endgenerate
+	 assign V = carry[n+1];
+endmodule
+
+
+// SINGLEBITADDER
+module SingleBitAdder(
+    input num1,
+    input num2,
+    input Cin,
+    output Cout,
+    output Res
+    );
+    
+    assign Res = num1^num2^Cin;
+    assign Cout = (num1&num2) | (Cin&(num1^num2));
+    
+endmodule
